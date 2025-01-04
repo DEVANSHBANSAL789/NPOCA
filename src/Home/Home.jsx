@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 // import studentbenefit from "../Image/studentbenefit.png";
 // import participating from "../Image/participating.png";
 // import exception from "../Image/exception.png";
@@ -14,8 +14,28 @@ import "./Home.css";
 // import "./Slider.css";
 // import slide1 from "../Image/slide1.png";
 // import slide2 from "../Image/slide2.png";
+import axios from "axios";
+import SessionCard from "../SessionCard/SessionCard.jsx";
 
 const Home = () => {
+  const [sessions, setSessions] = useState([]);
+
+  const fetchSessions = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/register/links`
+      );
+      setSessions(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSessions();
+  }, []);
+
   useEffect(() => {
     const counters = document.querySelectorAll(".number");
     counters.forEach((counter) => {
@@ -194,7 +214,36 @@ const Home = () => {
           prospects. Learn, and get inspired.
         </p>
         <div className="feature1">
-          <div className="feature" id="first">
+          {sessions.slice(0, 3).map((session, index) => (
+            // <div className="feature" key={session._id} id="first">
+            //   <div className="one">
+            //     <h2 className="h2">{session.heading}</h2>
+            //     <div>
+            //       <p className="p1">{session.date}</p>
+            //       <p>{session.title}</p>
+            //     </div>
+            //   </div>
+            //   <div className="two">
+            //     <h2 className="a">{session.name}</h2>
+            //     <div>
+            //       <h2 className="a">{session.title}</h2>
+            //       <a
+            //         href={session.link}
+            //         target="_blank"
+            //         rel="noopener noreferrer"
+            //       >
+            //         <button className="b">Register Now</button>
+            //       </a>
+            //     </div>
+            //     <h3 id="t" className="t">
+            //       {session.type}
+            //     </h3>
+            //   </div>
+            // </div>
+            <SessionCard session={session} id={index} />
+          ))}
+
+          {/* <div className="feature" id="first">
             <div className="one">
               <h2 className="h2">National Automobile Olympiad</h2>
               <div>
@@ -267,7 +316,7 @@ const Home = () => {
                 Live Online
               </h3>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="ourReach">
